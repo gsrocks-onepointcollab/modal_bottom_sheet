@@ -256,46 +256,43 @@ class CupertinoSheetBottomRouteTransition extends StatelessWidget {
       curve: _kCupertinoTransitionCurve,
     );
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: AnimatedBuilder(
-        animation: secondaryAnimation,
-        child: body,
-        builder: (BuildContext context, Widget? child) {
-          final double progress = curvedAnimation.value;
-          final double scale = 1 - progress / 10;
-          final Radius radius = progress == 0
-              ? Radius.zero
-              : Radius.lerp(deviceCorner, _kCupertinoSheetTopRadius, progress)!;
-          return Stack(
-            children: <Widget>[
-              Container(color: CupertinoColors.black),
-              // TODO(jaime): Add ColorFilter based on CupertinoUserInterfaceLevelData
-              // https://github.com/jamesblasco/modal_bottom_sheet/pull/44/files
-              Transform.translate(
-                offset: Offset(0, progress * topOffset),
-                child: Transform.scale(
-                  scale: scale,
-                  alignment: Alignment.topCenter,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: radius),
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        (CupertinoTheme.brightnessOf(context) == Brightness.dark
-                                ? CupertinoColors.inactiveGray
-                                : Colors.black)
-                            .withOpacity(secondaryAnimation.value * 0.1),
-                        BlendMode.srcOver,
-                      ),
-                      child: child,
+    return AnimatedBuilder(
+      animation: secondaryAnimation,
+      child: body,
+      builder: (BuildContext context, Widget? child) {
+        final double progress = curvedAnimation.value;
+        final double scale = 1 - progress / 10;
+        final Radius radius = progress == 0
+            ? Radius.zero
+            : Radius.lerp(deviceCorner, _kCupertinoSheetTopRadius, progress)!;
+        return Stack(
+          children: <Widget>[
+            Container(color: CupertinoColors.black),
+            // TODO(jaime): Add ColorFilter based on CupertinoUserInterfaceLevelData
+            // https://github.com/jamesblasco/modal_bottom_sheet/pull/44/files
+            Transform.translate(
+              offset: Offset(0, progress * topOffset),
+              child: Transform.scale(
+                scale: scale,
+                alignment: Alignment.topCenter,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: radius),
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      (CupertinoTheme.brightnessOf(context) == Brightness.dark
+                              ? CupertinoColors.inactiveGray
+                              : Colors.black)
+                          .withOpacity(secondaryAnimation.value * 0.1),
+                      BlendMode.srcOver,
                     ),
+                    child: child,
                   ),
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
